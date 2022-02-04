@@ -34,28 +34,33 @@ This may take a few minutes.
 
 ### 3. Run the Docker Image
 
-Run your image. Make sure you at least expose port 22 of your container so that you may be able to SSH into it. In addition to this, expose any other ports that your project may need. In our case, since the default project builds a server listening on port 5000, we will expose this port as well:
+Run your image. Make sure you at least expose port 22 of your container so that you may be able to SSH into it. In addition to this, expose any other ports that your project may need. In our case, since the default project builds a server listening on port 7777, we will expose this port as well:
 ```bash
-docker run -d --cap-add sys_ptrace -p 2222:22 -p 5000:5000 --name poco_dev mqumairi/poco_dev
+docker run -d --cap-add sys_ptrace -p 2222:22 -p 7777:7777 --name poco_dev mqumairi/poco_dev
 ```
 
 ### 4. Create New Toolchain
 
-For the rest of the steps we follow the instructions showcased in the official [Jetbrains video](https://www.youtube.com/watch?v=h69XLiMtCT8) starting from minute 3:15. Feel free to watch the video and skip the rest of the following steps. But if you prefer to read on...
+For the rest of the steps we follow the instructions showcased in the official [Jetbrains video](https://www.youtube.com/watch?v=h69XLiMtCT8) starting from minute 3:15. The only deviation from the video, is when you insert credentials to SSH into container, use the following username/password combination instead of what is supplied in the video:
+
+- **username**: root
+- **password**: root
+
+Feel free to watch the video and skip the rest of the following steps. 
+
+But if you prefer to read on...
 
 Open CLion preferences. From the side bar, under `Build, Execution, Deployment`, select `Toolchains`.
 
 Click on the tiny `+`, top left of the main window. Add a new `Remote Host`. Give it any name you want.
 
-Next to the `Credentials` field, select the small gear icon. This will popup a new window for you to insert your container’s credentials. In this new window, click on the tiny `+` located top left. Fill in the form.
+Next to the `Credentials` field, press on the small gear icon. This will pop up a new window for you to insert your container’s credentials. In this new window, click on the tiny `+` located top left. Fill in the form.
 
-***Host:*** localhost
+- **Host:** localhost
+- **Port:** 2222
+- **User name**: root
+- **Password**: root
 
-***Port:*** 2222
-
-***User name:*** user
-
-***Password:*** password
 
 Leave everything else as default. Press on “OK” to close the window, then press on “Apply” to create your new Toolchain.
 

@@ -1,58 +1,41 @@
 # CLion remote docker environment (How to build docker container, run and stop it)
 #
 # Build and run:
-#   docker build -t mqumairi/poco_dev -f Dockerfile.dev .
-#   docker run -d --cap-add sys_ptrace -p 2222:22 -p 5000:5000 --name poco_dev mqumairi/poco_dev
+#   docker build -t mqumairi/poco-dev -f Dockerfile.dev .
+#   docker run -d --cap-add sys_ptrace --privileged -p 2222:22 -p 7777:7777 mqumairi/poco-dev
 #   ssh-keygen -f "$HOME/.ssh/known_hosts" -R "[localhost]:2222"
 #
 # stop:
-#   docker stop clion_remote_env
+#   docker stop mqumairi/poco-dev
 #
 # ssh credentials (test user):
-#   user@password
+#   root@root
 
-FROM ubuntu
+FROM alpine
 
-RUN DEBIAN_FRONTEND="noninteractive" apt-get update && apt-get -y install tzdata
+RUN apk add --update openssh gcc g++ clang gdb cmake make ninja autoconf automake dos2unix tar rsync python3 \
+    bash git curl iputils poco-dev protobuf openssl openssl-dev libpq postgresql mysql unixodbc \
+  && rm  -rf /tmp/* /var/cache/apk/*
 
-RUN apt-get update \
-  && apt-get install -y ssh \
-      build-essential \
-      gcc \
-      g++ \
-      gdb \
-      clang \
-      make \
-      ninja-build \
-      cmake \
-      autoconf \
-      automake \
-      locales-all \
-      dos2unix \
-      rsync \
-      tar \
-      python \
-      libpoco-dev \
-      libpq-dev  \
-      postgresql-12 \
-      openssl \
-      libssl-dev \
-      libiodbc2 \
-      libiodbc2-dev \
-      mysql-server \
-  && apt-get clean
+RUN echo "root:root" | chpasswd
 
 RUN ( \
-    echo 'LogLevel DEBUG2'; \
-    echo 'PermitRootLogin yes'; \
-    echo 'PasswordAuthentication yes'; \
-    echo 'Subsystem sftp /usr/lib/openssh/sftp-server'; \
-  ) > /etc/ssh/sshd_config_test_clion \
-  && mkdir /run/sshd
+	echo 'Port 22'; \
+	echo '#AddressFamily any'; \
+	echo '#ListenAddress 0.0.0.0'; \
+	echo '#ListenAddress ::'; \
+	echo 'HostKey /etc/ssh/ssh_host_rsa_key'; \
+	echo 'HostKey /etc/ssh/ssh_host_dsa_key'; \
+	echo 'HostKey /etc/ssh/ssh_host_ecdsa_key'; \
+	echo 'HostKey /etc/ssh/ssh_host_ed25519_key'; \
+	echo 'PermitRootLogin yes'; \
+	echo '#PasswordAuthentication yes'; \
+	echo 'AuthorizedKeysFile .ssh/authorized_keys'; \
+	echo 'Subsystem sftp /usr/lib/ssh/sftp-server'; \
+  ) > /etc/sshd_config_test_clion
 
-RUN useradd -m user \
-  && yes password | passwd user
+RUN /usr/bin/ssh-keygen -A
+RUN ssh-keygen -t rsa -b 4096 -f  /etc/ssh/ssh_host_key
 
-RUN usermod -s /bin/bash user
-
-CMD ["/usr/sbin/sshd", "-D", "-e", "-f", "/etc/ssh/sshd_config_test_clion"]
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D", "-f", "/etc/sshd_config_test_clion"]

@@ -13,7 +13,7 @@ using namespace Poco::Util;
 int Server::main(const std::vector<std::string> &args) {
     //Setup HTTP server
     auto* params = new HTTPServerParams;
-    auto port = 5000;
+    auto port = 7777;
     ServerSocket socket(port);
     HTTPServer httpServer(new MainController, socket, params);
     httpServer.start();
