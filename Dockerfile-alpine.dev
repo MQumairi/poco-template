@@ -1,7 +1,7 @@
 # CLion remote docker environment (How to build docker container, run and stop it)
 #
 # Build and run:
-#   docker build -t mqumairi/poco-dev -f Dockerfile.dev .
+#   docker build -t mqumairi/poco-dev -f Dockerfile-alpine.dev .
 #   docker run -d --cap-add sys_ptrace --privileged -p 2222:22 -p 7777:7777 mqumairi/poco-dev
 #   ssh-keygen -f "$HOME/.ssh/known_hosts" -R "[localhost]:2222"
 #

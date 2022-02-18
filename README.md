@@ -26,7 +26,7 @@ The variation of the Docker Image provided with this project includes dependenci
 
 To build the image, execute the following command, while ensuring present working directory is this project's root:
 ```bash
-docker build -t mqumairi/poco_dev -f Dockerfile.dev .
+docker build -t mqumairi/poco_dev -f Dockerfile-alpine.dev .
 ```
 This may take a few minutes.
 

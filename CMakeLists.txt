@@ -8,12 +8,14 @@ find_package(Poco REQUIRED
         Util
         Net
         JSON
-        Data)
+        Data
+        XML)
 
 message("poco found is ${Poco_FOUND}")
 
-include_directories(${Poco_INCLUDE_DIRS})
+add_executable(${PROJECT_NAME} src/main.cpp src/server.cpp)
 
-link_libraries(${Poco_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ./src)
 
-add_executable(PocoTemplate src/main.cpp src/server.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${Poco_LIBRARIES})
+
