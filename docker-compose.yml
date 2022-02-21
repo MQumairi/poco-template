@@ -1,0 +1,12 @@
+version: '3'
+services:
+  poco-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile-alpine.dev
+    ports:
+      - "2222:22"
+      - "7777:7777"
+    cap_add:
+      - ALL
+    privileged: true
